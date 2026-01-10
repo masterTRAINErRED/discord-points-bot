@@ -27,96 +27,79 @@ function savePoints() {
 // ----------------------------
 // Bot ready
 client.once("ready", () => {
-  console.log(`✅ Logged in as ${client.user.tag}`);
+  console.log(` Logged in as ${client.user.tag}`);
 });
 
-// ----------------------------
-// Message commands
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
   const args = message.content.trim().split(" ");
   const command = args[0];
 
-  // ----------------------------
-  // Add single point
+  // Only one command will match
   if (command === "!addpoint") {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) 
-      return message.reply("❌ You don't have permission.");
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
+      return message.reply(" You don't have permission.");
 
     const user = message.mentions.users.first();
-    if (!user) return message.reply("⚠️ Mention a user to add a point.");
+    if (!user) return message.reply(" Mention a user to add a point.");
 
     if (!points[user.id]) points[user.id] = 0;
     points[user.id] += 1;
 
     savePoints();
-    message.channel.send(`⚠️ ${user.username} now has **${points[user.id]}** punishment point(s).`);
-  }
+    message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
 
-  // ----------------------------
-  // Remove single point
-  if (command === "!removepoint") {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) 
-      return message.reply("❌ You don't have permission.");
+  } else if (command === "!removepoint") {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
+      return message.reply(" You don't have permission.");
 
     const user = message.mentions.users.first();
-    if (!user) return message.reply("⚠️ Mention a user to remove a point.");
+    if (!user) return message.reply(" Mention a user to remove a point.");
 
     if (!points[user.id]) points[user.id] = 0;
     points[user.id] = Math.max(points[user.id] - 1, 0);
 
     savePoints();
-    message.channel.send(`✅ ${user.username} now has **${points[user.id]}** punishment point(s).`);
-  }
+    message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
 
-  // ----------------------------
-  // Add multiple points
-  if (command === "!addpoints") {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) 
-      return message.reply("❌ You don't have permission.");
+  } else if (command === "!addpoints") {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
+      return message.reply(" You don't have permission.");
 
     const user = message.mentions.users.first();
     const value = parseInt(args[2]);
-
-    if (!user) return message.reply("⚠️ Mention a user to add points.");
-    if (isNaN(value) || value <= 0) return message.reply("⚠️ Specify a valid number of points to add.");
+    if (!user) return message.reply(" Mention a user.");
+    if (isNaN(value) || value <= 0) return message.reply(" Specify a valid number of points to add.");
 
     if (!points[user.id]) points[user.id] = 0;
     points[user.id] += value;
 
     savePoints();
-    message.channel.send(`⚠️ ${user.username} now has **${points[user.id]}** punishment point(s).`);
-  }
+    message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
 
-  // ----------------------------
-  // Remove multiple points
-  if (command === "!removepoints") {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) 
-      return message.reply("❌ You don't have permission.");
+  } else if (command === "!removepoints") {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
+      return message.reply(" You don't have permission.");
 
     const user = message.mentions.users.first();
     const value = parseInt(args[2]);
-
-    if (!user) return message.reply("⚠️ Mention a user to remove points.");
-    if (isNaN(value) || value <= 0) return message.reply("⚠️ Specify a valid number of points to remove.");
+    if (!user) return message.reply(" Mention a user.");
+    if (isNaN(value) || value <= 0) return message.reply(" Specify a valid number of points to remove.");
 
     if (!points[user.id]) points[user.id] = 0;
     points[user.id] = Math.max(points[user.id] - value, 0);
 
     savePoints();
-    message.channel.send(`✅ ${user.username} now has **${points[user.id]}** punishment point(s).`);
-  }
+    message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
 
-  // ----------------------------
-  // Check points
-  if (command === "!points") {
+  } else if (command === "!points") {
     const user = message.mentions.users.first() || message.author;
     const pts = points[user.id] || 0;
-    message.reply(`⭐ ${user.username} has ${pts} point(s).`);
+    message.reply(` ${user.username} has ${pts} point(s).`);
   }
-
 });
+
 
 // ----------------------------
 // Login

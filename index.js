@@ -24,12 +24,13 @@ function savePoints() {
 }
 
 client.once("ready", () => {
-  console.log(`✅ Logged in as ${client.user.tag}`);
+  console.log(`Logged in as ${client.user.tag}`);
 });
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
+  // -------------------------
   // Command: !addpoint @user
   if (message.content.startsWith("!addpoint")) {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
@@ -43,36 +44,34 @@ client.on("messageCreate", async (message) => {
     points[user.id] += 1;
 
     savePoints(); // Save after adding
-
     message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
-    
-    // Command: !removepoint @user
-if (message.content.startsWith("!removepoint")) {
-  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-    return message.reply("❌ You don't have permission to use this command.");
   }
 
-  const user = message.mentions.users.first();
-  if (!user) return message.reply("⚠️ Mention a user to remove a point.");
+  // -------------------------
+  // Command: !removepoint @user
+  if (message.content.startsWith("!removepoint")) {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+      return message.reply("You don't have permission to use this command.");
+    }
 
-  if (!points[user.id]) points[user.id] = 0;
-  points[user.id] = Math.max(points[user.id] - 1, 0); // Prevent negative points
+    const user = message.mentions.users.first();
+    if (!user) return message.reply("Mention a user to remove a point.");
 
-  savePoints();
+    if (!points[user.id]) points[user.id] = 0;
+    points[user.id] = Math.max(points[user.id] - 1, 0); // Prevent negative points
 
-  message.channel.send(`✅ ${user.username} now has **${points[user.id]}** punishment point(s).`);
-}
-
+    savePoints();
+    message.channel.send(`${user.username} now has **${points[user.id]}** punishment point(s).`);
   }
 
-  // Optional: !points @user command
+  // -------------------------
+  // Command: !points @user
   if (message.content.startsWith("!points")) {
     const user = message.mentions.users.first() || message.author;
     const pts = points[user.id] || 0;
     message.reply(` ${user.username} has ${pts} point(s).`);
   }
 });
-
 
 
 

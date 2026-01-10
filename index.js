@@ -45,6 +45,24 @@ client.on("messageCreate", async (message) => {
     savePoints(); // Save after adding
 
     message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
+    
+    // Command: !removepoint @user
+if (message.content.startsWith("!removepoint")) {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    return message.reply("❌ You don't have permission to use this command.");
+  }
+
+  const user = message.mentions.users.first();
+  if (!user) return message.reply("⚠️ Mention a user to remove a point.");
+
+  if (!points[user.id]) points[user.id] = 0;
+  points[user.id] = Math.max(points[user.id] - 1, 0); // Prevent negative points
+
+  savePoints();
+
+  message.channel.send(`✅ ${user.username} now has **${points[user.id]}** punishment point(s).`);
+}
+
   }
 
   // Optional: !points @user command
@@ -56,22 +74,7 @@ client.on("messageCreate", async (message) => {
 });
 
 
-// Command: !removepoint @user
-if (message.content.startsWith("!removepoint")) {
-  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-    return message.reply("❌ You don't have permission to use this command.");
-  }
 
-  const user = message.mentions.users.first();
-  if (!user) return message.reply(" Mention a user to remove a point.");
-
-  if (!points[user.id]) points[user.id] = 0;
-  points[user.id] = Math.max(points[user.id] - 1, 0); // Prevent negative points
-
-  savePoints();
-
-  message.channel.send(` ${user.username} now has **${points[user.id]}** punishment point(s).`);
-}
 
 
 client.login(process.env.DISCORD_TOKEN);

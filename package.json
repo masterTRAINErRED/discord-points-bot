@@ -1,7 +1,7 @@
 {
   "name": "discord-points-bot",
   "version": "1.0.0",
-  "description": "Simple Discord points bot",
+  "description": "purple",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

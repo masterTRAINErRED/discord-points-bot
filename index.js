@@ -10,7 +10,7 @@ const client = new Client({
   ]
 });
 
-// ----------------------------
+
 // Load points from JSON
 let points = {};
 try {
@@ -24,7 +24,7 @@ function savePoints() {
   fs.writeFileSync("points.json", JSON.stringify(points, null, 2));
 }
 
-// ----------------------------
+
 // Bot ready
 client.once("ready", () => {
   console.log(` Logged in as ${client.user.tag}`);
@@ -101,6 +101,6 @@ client.on("messageCreate", async (message) => {
 });
 
 
-// ----------------------------
+
 // Login
 client.login(process.env.DISCORD_TOKEN);
